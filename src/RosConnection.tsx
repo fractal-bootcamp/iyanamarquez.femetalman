@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-// import ROSLIB from 'roslib';
+import ROSLIB from 'roslib';
 
 const RosConnection = () => {
     const [ros, setRos] = useState(null);
@@ -47,20 +47,38 @@ const RosConnection = () => {
 
             listener.subscribe((message) => {
                 console.log('Received message on ' + listener.name + ': ' + message.data);
-                setMessage(message.data); // Update state with received message
+                setMessage(message.data); // received message
             });
 
-            // Cleanup subscription on component unmount
+            // Cleanup 
             return () => {
                 listener.unsubscribe();
             };
         }
-    }, [ros]); // Runs when 'ros' state changes
+    }, [ros]); 
+
+    const publishMessage = () => {
+        if (ros) {
+            const publisher = new ROSLIB.Topic({
+                ros: ros,
+                name: '/example_topic',
+                messageType: 'std_msgs/String',
+            });
+    
+            const msg = new ROSLIB.Message({
+                data: 'Hello, ROS!',
+            });
+    
+            publisher.publish(msg);
+        }
+    };
+    
 
     return (
         <div>
             <h1>ROS Connection Status</h1>
             <p>{rosConnected ? 'Connected to ROS' : 'Disconnected from ROS'}</p>
+            <button onClick={publishMessage}>Publish Message</button>
             <h2>Latest Message</h2>
             <p>{message}</p>
         </div>
