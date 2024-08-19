@@ -1,3 +1,17 @@
+declare module './mockRoslib' {
+    export class Ros {
+        constructor();
+        on(event: string, callback: (...args: any[]) => void): void;
+        close(): void;
+    }
+
+    export class Topic {
+        constructor(options: { ros: Ros; name: string; messageType: string });
+        subscribe(callback: (msg: any) => void): void;
+        unsubscribe(): void;
+        name: string;
+    }
+}
 class MockRos {
   constructor() {
     console.log("Mock ROS instance created");
