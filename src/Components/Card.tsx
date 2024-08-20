@@ -1,115 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import jsYaml from "../../tooljs.js";
 import DropdownOption from "./DropdownOption";
+import { ToolConfig, Service, Payload, ServiceRequest } from '../types/toolConfig.types';
 
-const toolOptions = {
-    Pencil: ['Sketch', 'Draw', 'Shade'],
-    Brush: ['Watercolor', 'Oil', 'Acrylic'],
-    Eraser: ['Soft Eraser', 'Hard Eraser', 'Kneaded Eraser'],
-};
+export interface Tool {
+    name: string;
+    services: Service[];
+    connect_services: ServiceRequest[];
+    disconnect_services: ServiceRequest[];
+    payloads: Payload[];
+}
 
-const toolPayloadButtonOptions = {
-    Pencil: {
-        Sketch: [
-            { label: 'Sketch Button 1', rosTopic: '/sketch1' },
-            { label: 'Sketch Button 2', rosTopic: '/sketch2' },
-        ],
-        Draw: [
-            { label: 'Draw Button 1', rosTopic: '/draw1' },
-            { label: 'Draw Button 2', rosTopic: '/draw2' },
-        ],
-        Shade: [
-            { label: 'Shade Button 1', rosTopic: '/shade1' },
-            { label: 'Shade Button 2', rosTopic: '/shade2' },
-        ],
-    },
-    Brush: {
-        Watercolor: [
-            { label: 'Watercolor Button 1', rosTopic: '/watercolor1' },
-            { label: 'Watercolor Button 2', rosTopic: '/watercolor2' },
-        ],
-        Oil: [
-            { label: 'Oil Button 1', rosTopic: '/oil1' },
-            { label: 'Oil Button 2', rosTopic: '/oil2' },
-        ],
-        Acrylic: [
-            { label: 'Acrylic Button 1', rosTopic: '/acrylic1' },
-            { label: 'Acrylic Button 2', rosTopic: '/acrylic2' },
-        ],
-    },
-    Eraser: {
-        'Soft Eraser': [
-            { label: 'Soft Eraser Button 1', rosTopic: '/soft_eraser1' },
-            { label: 'Soft Eraser Button 2', rosTopic: '/soft_eraser2' },
-        ],
-        'Hard Eraser': [
-            { label: 'Hard Eraser Button 1', rosTopic: '/hard_eraser1' },
-            { label: 'Hard Eraser Button 2', rosTopic: '/hard_eraser2' },
-        ],
-        'Kneaded Eraser': [
-            { label: 'Kneaded Eraser Button 1', rosTopic: '/kneaded_eraser1' },
-            { label: 'Kneaded Eraser Button 2', rosTopic: '/kneaded_eraser2' },
-        ],
-    },
-};
+export function extractLastWord(str: string): string | null {
+    const match = str.match(/[^/]+$/);
+    return match ? match[0] : null;
+}
 
-type Tool = keyof typeof toolOptions;
-type PayloadOptions = typeof toolPayloadButtonOptions[Tool];
 
 const Card = () => {
-    const toolOptionsKeys = Object.keys(toolOptions) as Array<keyof typeof toolOptions>;
+    const [toolConfig, setToolConfig] = useState<Tool[]>([]);
+    const [selectedTool, setSelectedTool] = useState<string>('fastener_gripper');
 
-    const [currentTool, setCurrentTool] = useState<Tool>('Pencil');
-    const [payloadOptions, setPayloadOptions] = useState<string[]>(toolOptions[currentTool]);
-    const [currentPayload, setCurrentPayload] = useState('');
-    const [buttonOptions, setButtonOptions] = useState<{ label: string; rosTopic: string }[]>([]); // Specify the type for buttonOptions
 
-    const handleToolSelect = (option: typeof toolOptionsKeys[number]) => {
-        setCurrentTool(option);
-        setPayloadOptions(toolOptions[option]); // Update payload options based on selected tool
-        setCurrentPayload(''); // Reset payload to empty when tool changes
-        setButtonOptions([]); // Reset button options when tool changes
+    useEffect(() => {
+        // Ensure jsYaml.tools is an array before setting it
+        if (Array.isArray(jsYaml.tools)) {
+            setToolConfig(jsYaml.tools);
+        } else {
+            console.error('jsYaml.tools is not an array:', jsYaml.tools);
+        }
+    }, []);
+    console.log('toolConfig', toolConfig);
+
+    const handleToolSelect = (toolName: string) => {
+        setSelectedTool(toolName);
     };
 
-    const handlePayloadSelect = (option: string) => {
-        setCurrentPayload(option); // Update the current payload selection
-        setButtonOptions(toolPayloadButtonOptions[currentTool][option as keyof PayloadOptions] || []); // Update button options based on selected payload
-    };
-
+    const currentTool = toolConfig.find(tool => tool.name === selectedTool);
+    // console.log(currentTool);
     return (
-        <div className="max-w-sm rounded overflow-auto shadow-lg border-2 border-gray-300 p-4 h-96">
+        <div className="max-w-sm rounded overflow-auto shadow-lg border-2 border-gray-300 p-4 h-124">
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 text-center">Select Tool</div>
             </div>
-            {/* Tool selection */}
-            <div className="flex justify-center flex-col gap-2 space-y-2 mb-4">
-                <div className="flex justify-between flex-row no-wrap">
-                    <span>Current tool:</span>
+            <div className="flex flex-row justify-between">
+                <span>Select Tool</span>
+
+                <div className="mb-4">
                     <DropdownOption
-                        onSelect={handleToolSelect as (option: string) => void}
-                        options={Object.keys(toolOptions)}
-                        label={currentTool} // Show current tool
+                        onSelect={handleToolSelect}
+                        options={toolConfig.map(tool => tool.name) || []}
+                        label={selectedTool || 'Select a tool'}
                     />
                 </div>
-                <div className="flex justify-between">
-                    Payload tool:
-                    <span className="font-bold">
-                        <DropdownOption
-                            onSelect={handlePayloadSelect}
-                            options={payloadOptions}
-                            label={currentPayload || 'Select an option'} // Show current payload option or placeholder
-                        />
-                    </span>
+            </div>
+            {currentTool && (
+                <div>
+                    <h2 className="text-center font-bold mb-2">Services</h2>
+                    {currentTool.services.map((service: Service, index: number) => (
+                        <button
+                            key={index}
+                            className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded mb-2 w-full"
+                            onClick={() => console.log(`Service: ${service.name}`)}
+                        // call service
+                        >
+                            {extractLastWord(service.name)}
+                        </button>
+                    ))}
                 </div>
-            </div>
-            {/* Button options */}
-            <div className="flex justify-center flex-col gap-2 space-y-2 mb-4">
-                <h2 className="text-center">Button Options</h2>
-                {buttonOptions.map((button, index) => (
-                    <button key={index} className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded" onClick={() => console.log(`ROS Topic: ${button.rosTopic}`)}>
-                        {button.label}
-                    </button>
-                ))}
-            </div>
+            )}
         </div>
     );
 };
