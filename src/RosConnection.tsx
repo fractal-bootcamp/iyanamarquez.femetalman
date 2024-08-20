@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-// import ROSLIB from 'roslib';
-import MockRos from './mockRoslib'; // Import the default export
-const { Ros, Topic } = MockRos; // Destructure to get Ros and Topic
+import ROSLIB from 'roslib';
+// import MockRos from './mockRoslib'; // Import the default export
+// const { Ros, Topic } = MockRos; 
 
 const RosConnection = () => {
     const [ros, setRos] = useState(null);
@@ -68,7 +68,7 @@ const RosConnection = () => {
             });
 
             const msg = new ROSLIB.Message({
-                data: 'Hello, ROS!',
+                data: 'Hello, ROS!',        
             });
 
             publisher.publish(msg);
