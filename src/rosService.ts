@@ -26,6 +26,7 @@ const initializeRos = (url: string): Promise<ROSLIB.Ros> => {
 };
 
 const callService = (name: string, serviceName: string, requestData: any) => {
+  // TODO: remove test
   if (ros || "TEST" === "TEST") {
     console.log("Calling service:", name, serviceName, requestData);
     const service = new ROSLIB.Service({
@@ -34,7 +35,7 @@ const callService = (name: string, serviceName: string, requestData: any) => {
       serviceType: serviceName, // Update with the actual service type
     });
 
-    const request = new ROSLIB.ServiceRequest(requestData);
+    const request = new ROSLIB.ServiceRequest({});
 
     service.callService(
       request,
@@ -50,4 +51,22 @@ const callService = (name: string, serviceName: string, requestData: any) => {
   }
 };
 
-export { initializeRos, callService };
+interface PayloadData {
+  mass: number;
+  cog: {
+    x: number;
+    y: number;
+    z: number;
+  };
+}
+
+const createRequestPayload = (payloadData: PayloadData) => {
+  return new ROSLIB.ServiceRequest({
+    data: {
+      mass: payloadData.mass,
+      cog: [payloadData.cog.x, payloadData.cog.y, payloadData.cog.z],
+    },
+  });
+};
+
+export { initializeRos, callService, createRequestPayload };
