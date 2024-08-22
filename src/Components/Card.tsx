@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import jsYaml from "../../tooljs.js";
 import DropdownOption from "./DropdownOption";
 import { Service, Payload, ServiceRequest } from '../types/toolConfig.types';
-import { callService, initializeRos } from '../rosService';
+import { callService, createRequestPayload, initializeRos } from '../rosService';
 
 export interface Tool {
     name: string;
@@ -20,6 +20,8 @@ export function extractLastWord(str: string): string | null {
 const Card = () => {
     const [toolConfig, setToolConfig] = useState<Tool[]>([]);
     const [selectedTool, setSelectedTool] = useState<Tool['name']>('fastener_gripper');
+    const [selectedPayload, setSelectedPayload] = useState<Payload | null>(null);
+
     useEffect(() => {
         // Initialize ROS connection
         initializeRos('ws://localhost:9090').catch(console.error);
@@ -27,15 +29,41 @@ const Card = () => {
         // Ensure jsYaml.tools is an array before setting it
         if (Array.isArray(jsYaml.tools)) {
             setToolConfig(jsYaml.tools);
+            setSelectedTool('fastener_gripper'); // Default to a tool
         } else {
             console.error('jsYaml.tools is not an array:', jsYaml.tools);
         }
     }, []);
 
+    useEffect(() => {
+        if (toolConfig.length > 0) {
+            const tool = toolConfig.find(tool => tool.name === selectedTool);
+            if (tool) {
+                setSelectedPayload(tool.payloads.length > 0 ? tool.payloads[0] : null);
+            }
+        }
+    }, [selectedTool, toolConfig]);
+
+    console.log('payloads is :', selectedTool);
+
     const handleToolSelect = (toolName: string) => {
         setSelectedTool(toolName);
     };
 
+    const handlePayloadSelect = async (payloadName: string) => {
+        const tool = toolConfig.find(tool => tool.name === selectedTool);
+        if (tool) {
+            const payload = tool.payloads.find(payload => payload.name === payloadName);
+            setSelectedPayload(payload || null);
+            if (payload) {
+                console.log('calling service payload isss :', payload);
+                createRequestPayload({
+                    mass: payload.mass,
+                    cog: payload.cog
+                });
+            }
+        }
+    };
     const currentTool = toolConfig.find(tool => tool.name === selectedTool);
 
     return (
@@ -52,22 +80,38 @@ const Card = () => {
                         label={selectedTool || 'Select a tool'}
                     />
                 </div>
+
+            </div>
+            <div className="flex flex-row justify-between">
+                <span>Select Payload</span>
+                <div className="mb-4">
+                    {currentTool && (
+                        <DropdownOption
+                            onSelect={handlePayloadSelect}
+                            options={currentTool.payloads.map(payload => payload.name) || []}
+                            label={selectedPayload?.name || 'Select a payload'}
+                        />
+                    )}
+                </div>
+
             </div>
             {currentTool && (
                 <div>
-                    <h2 className="text-center font-bold mb-2">Services</h2>
-                    {currentTool.services.map((service: Service, index: number) => (
-                        < button
-                            key={index}
-                            className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded mb-2 w-full"
-                            onClick={() => callService(selectedTool, service.name, {})} // Call ROS service on click
-                        >
-                            {extractLastWord(service.name)}
-                        </button>
-                    ))}
+                    <h2 className="text-center font-bold mb-2">{currentTool.name}</h2>
+                    {currentTool.services
+                        .map((service, index) => (
+                            <button
+                                key={index}
+                                className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded mb-2 w-full"
+                                onClick={() => callService(service.name, service.class, {})}
+                            >
+                                {extractLastWord(service.name)}
+                            </button>
+                        ))
+                    }
                 </div>
-            )
-            }
+            )}
+
         </div >
     );
 };
