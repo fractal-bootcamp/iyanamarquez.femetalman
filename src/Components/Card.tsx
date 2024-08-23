@@ -17,6 +17,7 @@ export function extractLastWord(str: string): string | null {
     return match ? match[0] : null;
 }
 
+// TODO add leftarm rightarm props
 const Card = () => {
     const [toolConfig, setToolConfig] = useState<Tool[]>([]);
     const [selectedTool, setSelectedTool] = useState<Tool['name']>('fastener_gripper');
