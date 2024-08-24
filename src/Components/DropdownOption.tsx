@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { extractLastWord } from "./Card";
+import { extractLastWord } from "./ToolCard";
 
 
 interface DropdownOptionProps {

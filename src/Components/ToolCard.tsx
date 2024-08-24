@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import jsYaml from "../../tooljs.js";
-import DropdownOption from "./DropdownOption";
-import { Service, Payload, ServiceRequest } from '../types/toolConfig.types';
-import { callService, createRequestPayload, initializeRos } from '../rosService';
+import DropdownOption from "./DropdownOption.js";
+import { Service, Payload, ServiceRequest } from '../types/toolConfig.types.js';
+import { callService, createRequestPayload, initializeRos } from '../rosService.js';
 
 export interface Tool {
     name: string;
@@ -17,8 +17,11 @@ export function extractLastWord(str: string): string | null {
     return match ? match[0] : null;
 }
 
-// TODO add leftarm rightarm props
-const Card = () => {
+interface ToolCardProps {
+    toolPosition: string;
+}
+
+const ToolCard = ({ toolPosition }: ToolCardProps) => {
     const [toolConfig, setToolConfig] = useState<Tool[]>([]);
     const [selectedTool, setSelectedTool] = useState<Tool['name']>('fastener_gripper');
     const [selectedPayload, setSelectedPayload] = useState<Payload | null>(null);
@@ -70,7 +73,7 @@ const Card = () => {
     return (
         <div className="max-w-sm rounded overflow-auto shadow-lg border-2 border-gray-300 p-4 h-124">
             <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2 text-center">Select Tool</div>
+                <div className="font-bold text-xl mb-2 text-center">{toolPosition === 'left' ? 'Left Arm' : 'Right Arm'}</div>
             </div>
             <div className="flex flex-row justify-between">
                 <span>Select Tool</span>
@@ -117,4 +120,4 @@ const Card = () => {
     );
 };
 
-export default Card;
+export default ToolCard;
