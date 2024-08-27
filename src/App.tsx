@@ -1,35 +1,11 @@
 import './App.css'
-import RosConnection from './RosConnection'
-// import FakeRosConnection from './FakeRosConnection'
-import ToolCard from './Components/ToolCard'
-import ArmCard from './Components/ArmCard/ArmCard'
-import GridTable from './Components/GridTable/GridTable'
-import JoystickComponent from './Components/GridTable/Joystick'
-import RosImageStream from './RosImageStream'
-import ROSUrlStream from './RosUrlStream'
 import Dashboard from './Components/Dashboard/Dashboard'
 
 function App() {
 
   return (
     <>
-      {/* <h1 className="text-4xl font-bold">Hello World</h1> */}
-      {/* <RosConnection /> */}
-      {/* <FakeRosConnection /> */}
-      {/* <ToolCard toolPosition="left" />
-      <ToolCard toolPosition="right" /> */}
-      {/* <div className="flex flex-row space-x-4 justify-center items-center">
-        <ArmCard armPosition="left" />
-        <ArmCard armPosition="right" />
-      </div> */}
-      {/* <JoystickComponent /> */}
-      {/* <GridTable /> */}
-      {/* where does the grid table data get published to */}
-      {/* <RosImageStream /> */}
-      {/* <ROSUrlStream /> */}
       <Dashboard />
-
-
     </>
   )
 }
