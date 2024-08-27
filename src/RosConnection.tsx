@@ -7,7 +7,7 @@ const RosConnection: React.FC = () => {
     const { rosConnected, setRosConnected } = useRosStore();
 
     useEffect(() => {
-        initializeRos('ws://localhost:9090')
+        initializeRos('http://localhost:8080')
             .then(() => {
                 setRosConnected(true);
             })
