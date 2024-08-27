@@ -51,13 +51,13 @@ const GridTable: React.FC = () => {
         setYLabels([...yLabels, newRowLabel]);
         setGridData(prev => ({
             ...prev,
-            ...initialXLabels.reduce((acc, x) => {
-                acc[x] = {
+            ...Object.fromEntries(initialXLabels.map(x => [
+                x,
+                {
                     ...prev[x],
                     [newRowLabel]: x === 'units' ? unitsOptions[0] : ''
-                };
-                return acc;
-            }, {} as Record<string, string>)
+                }
+            ]))
         }));
     };
 
@@ -74,26 +74,51 @@ const GridTable: React.FC = () => {
         });
     };
 
-    // Handle button click in "click to record" column
+    // Update handleRecordClick function
     const handleRecordClick = (y: string) => {
-        console.log(`Recording data for row ${y}`);
+        const measurement = {
+            x: gridData['x'][y],
+            y: gridData['y'][y],
+            z: gridData['z'][y]
+        };
+        setGridData(prev => ({
+            ...prev,
+            measured: {
+                ...prev.measured,
+                [y]: JSON.stringify(measurement)
+            }
+        }));
+        console.log(measurement);
     };
 
     return (
-        <div className="p-4">
-            <div className="mb-4 flex flex-col gap-2 items-start">
+        <div className="w-full">
+            <div className="mb-4 flex flex-col gap-2 items-start ml-4 text-2xl">
                 <button
                     onClick={addRow}
-                    className="bg-blue-500 text-white px-4 py-2 rounded transition-transform transform focus:outline-none active:scale-95"
+                    className="bg-slate-500 text-white px-4 py-2 rounded transition-transform transform focus:outline-none active:scale-95"
                 >
                     Add Row
                 </button>
                 <button
                     onClick={() => { }}
-                    className="bg-blue-500 text-white px-4 py-2 rounded transition-transform transform focus:outline-none active:scale-95"
+                    className="bg-slate-500 text-white px-4 py-2 rounded transition-transform transform focus:outline-none active:scale-95"
                 >
                     Fit transform
                 </button>
+            </div>
+            <div className="flex items-center gap-4 w-full border border-gray-300 px-3">
+                <div className="flex items-center gap-2 w-full ">
+                    <label htmlFor="instrumentHeight" className="whitespace-nowrap">Instrument Height:</label>
+                    <input id="instrumentHeight" type="text" className="border border-gray-300 p-2 rounded w-full" />
+                </div>
+                <div className="flex items-center gap-2">
+                    <select id="instrumentOption" className="border border-gray-300 p-2 rounded">
+                        <option value="option1">Option 1</option>
+                        <option value="option2">Option 2</option>
+                        <option value="option3">Option 3</option>
+                    </select>
+                </div>
             </div>
             <table className="table-auto w-full border-collapse border border-gray-300">
                 <thead>
@@ -142,6 +167,13 @@ const GridTable: React.FC = () => {
                                                 Measure
                                             </button>
                                         </div>
+                                    ) : x === 'measured' ? (
+                                        <input
+                                            type="text"
+                                            value={gridData[x]?.[y] || ''}
+                                            readOnly
+                                            className="w-full border border-gray-300 p-1 rounded"
+                                        />
                                     ) : (
                                         <input
                                             type="text"
@@ -161,3 +193,4 @@ const GridTable: React.FC = () => {
 };
 
 export default GridTable;
+

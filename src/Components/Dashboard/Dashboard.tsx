@@ -21,8 +21,8 @@ const Dashboard = () => {
     };
 
     return (
-        <div>
-            <div className="text-3xl font-medium text-center text-gray-500 border-b border-gray-200 ">
+        <div className="flex flex-col h-screen">
+            <div className="sticky top-0 z-10 bg-white text-3xl font-medium text-center text-gray-500 border-b border-gray-200">
                 <ul className="flex flex-wrap -mb-px">
                     {['Setup', 'Program', 'Step', 'Jog', 'Calibrate'].map((tab) => (
                         <li key={tab} className="me-2">
@@ -41,7 +41,7 @@ const Dashboard = () => {
                     ))}
                 </ul>
             </div>
-            <div className="bg-gray-200 h-screen">
+            <div className="flex-grow bg-gray-100 overflow-auto">
                 {renderComponent()}
             </div>
         </div>

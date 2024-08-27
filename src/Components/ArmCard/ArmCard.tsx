@@ -27,15 +27,15 @@ const ArmCard = ({ armPosition }: ArmCardProps) => {
         <div className="w-1/2 lg:w-1/3">
             <h1 className="text-center">{armPosition}</h1>
             <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow">
-                <div className='mb-4 text-sm'>
-                    {/* TODO: UPDATE THIS */}
+                {/* TODO: UPDATE THIS */}
+                {/* <div className='mb-4 text-sm'>
                     <CircleIcon color="success" />
                     robot mode: ...
                     <div>
                         <CircleIcon color="error" />
                         safety mode: ...
                     </div>
-                </div>
+                </div> */}
                 <div>
                     {/* 4 buttons */}
                     <div className="flex flex-col justify-between space-y-4 text-sm">
@@ -54,7 +54,7 @@ const ArmCard = ({ armPosition }: ArmCardProps) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
 
     );
 };
