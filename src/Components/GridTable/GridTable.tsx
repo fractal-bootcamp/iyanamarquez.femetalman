@@ -136,8 +136,9 @@ const GridTable: React.FC = () => {
                                         <div className="flex justify-center items-center h-full">
                                             <button
                                                 onClick={() => handleRecordClick(y)}
-                                                className="bg-slate-200 text-black px-2 py-1 rounded transition-transform transform focus:outline-none active:scale-95"
+                                                className="bg-blue-300 text-black px-2 py-2 rounded transition-transform transform focus:outline-none active:scale-95"
                                             >
+                                                {/* TODO: make this an output */}
                                                 Measure
                                             </button>
                                         </div>

@@ -71,7 +71,7 @@ const ToolCard = ({ toolPosition }: ToolCardProps) => {
     const currentTool = toolConfig.find(tool => tool.name === selectedTool);
 
     return (
-        <div className="max-w-sm rounded overflow-auto shadow-lg border-2 border-gray-300 p-4 h-124">
+        <div className="w-1/2 lg:w-1/3 rounded overflow-auto shadow-lg border-2 border-gray-300 p-4 h-124">
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 text-center">{toolPosition === 'left' ? 'Left Arm' : 'Right Arm'}</div>
             </div>
@@ -106,7 +106,7 @@ const ToolCard = ({ toolPosition }: ToolCardProps) => {
                         .map((service, index) => (
                             <button
                                 key={index}
-                                className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded mb-2 w-full"
+                                className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded mb-2 w-full transition-transform duration-200 ease-in-out active:scale-95 focus:outline-none"
                                 onClick={() => callService(service.name, service.class, {})}
                             >
                                 {extractLastWord(service.name)}
