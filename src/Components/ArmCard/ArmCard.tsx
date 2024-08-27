@@ -24,7 +24,7 @@ const buttonConfigs: ButtonConfig[] = [
 
 const ArmCard = ({ armPosition }: ArmCardProps) => {
     return (
-        <div className="w-1/2  md:w-1/3 lg:w-1/4">
+        <div className="w-1/2 lg:w-1/3">
             <h1 className="text-center">{armPosition}</h1>
             <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow">
                 <div className='mb-4 text-sm'>
