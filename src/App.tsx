@@ -6,6 +6,7 @@ import ArmCard from './Components/ArmCard/ArmCard'
 import GridTable from './Components/Measure/Layout'
 import JoystickComponent from './Components/Measure/Joystick'
 import RosImageStream from './RosImageStream'
+import ROSUrlStream from './RosUrlStream'
 
 function App() {
 
@@ -24,6 +25,9 @@ function App() {
       {/* <GridTable /> */}
       {/* where does the grid table data get published to */}
       <RosImageStream />
+      {/* <ROSUrlStream /> */}
+
+
     </>
   )
 }

@@ -1,80 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ROSLIB from 'roslib';
-import { initializeRos } from './rosService';
+import React, { useState, useEffect } from 'react';
 
-// interface ROSImageStreamProps {
-//     rosUrl: string;
-//     imageTopic: string;
-// }
+interface ROSImageStreamProps {
+    streamUrl: string;
+}
 
-const ROSImageStream = () => {
-    // TODO: Replace constants 
-    const rosUrl = "ws://localhost:9090"
-    const imageTopic = "/camera/image"
-
-    const [imageUrl, setImageUrl] = useState<string | null>(null);
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+const ROSImageStream: React.FC<ROSImageStreamProps> = ({ streamUrl }) => {
+    const [error, setError] = useState<string | null>(null);
+    const [imageSrc, setImageSrc] = useState<string>(streamUrl);
 
     useEffect(() => {
-        // Initialize ROS connection
-        const setupRos = async () => {
-            try {
-                await initializeRos(rosUrl);
-
-                // Set up image topic subscription
-                const ros = new ROSLIB.Ros({ url: rosUrl });
-                const imageTopicSub = new ROSLIB.Topic({
-                    ros: ros,
-                    name: imageTopic,
-                    messageType: 'sensor_msgs/Image',
-                });
-
-                imageTopicSub.subscribe((message: any) => {
-                    const imageData = new Uint8Array(message.data);
-                    const blob = new Blob([imageData], { type: 'image/jpeg' }); // Adjust MIME type if necessary
-                    const url = URL.createObjectURL(blob);
-                    setImageUrl(url);
-                });
-
-                // Clean up on component unmount
-                return () => {
-                    imageTopicSub.unsubscribe();
-                    ros.close();
-                };
-
-            } catch (error) {
-                console.error('Failed to connect to ROS:', error);
-            }
-        };
-
-        setupRos();
-    }, [rosUrl, imageTopic]);
-
-    useEffect(() => {
-        if (imageUrl && canvasRef.current) {
-            const canvas = canvasRef.current;
-            const context = canvas.getContext('2d');
-            const img = new Image();
-
-            img.onload = () => {
-                // Set canvas dimensions to match the image
-                canvas.width = img.width;
-                canvas.height = img.height;
-                // Draw the image onto the canvas
-                if (context) {
-                    context.drawImage(img, 0, 0);
-                }
-            };
-
-            img.src = imageUrl;
-        }
-    }, [imageUrl]);
+        setImageSrc(streamUrl);
+    }, [streamUrl]);
 
     return (
-        <div>
-            <h1>Image Stream</h1>
-            <canvas ref={canvasRef} />
-            {!imageUrl && <p>Loading...</p>}
+        <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <img 
+                // src={imageSrc} 
+                src='http://localhost:8080/stream?topic=/cv_camera/image_raw'
+                alt="ROS Stream" 
+                onError={() => setError('Failed to load image.')} 
+                style={{ 
+                    width: '100%', 
+                    height: 'auto', 
+                    objectFit: 'contain', 
+                    display: 'block' 
+                }} 
+            />
         </div>
     );
 };
