@@ -5,6 +5,7 @@ import ToolCard from './Components/ToolCard'
 import ArmCard from './Components/ArmCard/ArmCard'
 import GridTable from './Components/Measure/Layout'
 import JoystickComponent from './Components/Measure/Joystick'
+import RosImageStream from './RosImageStream'
 
 function App() {
 
@@ -19,8 +20,10 @@ function App() {
         <ArmCard armPosition="left" />
         <ArmCard armPosition="right" />
       </div> */}
-      <JoystickComponent />
-      <GridTable />
+      {/* <JoystickComponent /> */}
+      {/* <GridTable /> */}
+      {/* where does the grid table data get published to */}
+      <RosImageStream />
     </>
   )
 }

@@ -69,4 +69,29 @@ const createRequestPayload = (payloadData: PayloadData) => {
   });
 };
 
-export { initializeRos, callService, createRequestPayload };
+// TODO: what is the message type?
+const publishJoystickData = (x: number, y: number) => {
+  if (ros) {
+    const publisher = new ROSLIB.Topic({
+      ros: ros,
+      name: "/publish_joystick", // The ROS topic you want to publish to
+      messageType: "geometry_msgs/Vector3", // The type of message you're publishing
+    });
+    // TODO: What should z be?
+    const message = new ROSLIB.Message({
+      x: x,
+      y: y,
+      z: 0,
+    });
+    publisher.publish(message);
+  } else {
+    console.warn("No ROS connection");
+  }
+};
+
+export {
+  initializeRos,
+  callService,
+  createRequestPayload,
+  publishJoystickData,
+};

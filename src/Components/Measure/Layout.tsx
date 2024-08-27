@@ -6,7 +6,7 @@ const GridTable: React.FC = () => {
     const initialYLabels = ['1', '2', '3'];
 
     // Define available units of measure
-    const unitsOptions = ['cm', 'm']
+    const unitsOptions = ['inches', 'feet', 'meters', 'centimeters']
 
     // State for x-axis and y-axis labels
     const [xLabels, setXLabels] = useState(initialXLabels);
@@ -81,12 +81,18 @@ const GridTable: React.FC = () => {
 
     return (
         <div className="p-4">
-            <div className="mb-4">
+            <div className="mb-4 flex flex-col gap-2 items-start">
                 <button
                     onClick={addRow}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    className="bg-blue-500 text-white px-4 py-2 rounded transition-transform transform focus:outline-none active:scale-95"
                 >
                     Add Row
+                </button>
+                <button
+                    onClick={() => { }}
+                    className="bg-blue-500 text-white px-4 py-2 rounded transition-transform transform focus:outline-none active:scale-95"
+                >
+                    Fit transform
                 </button>
             </div>
             <table className="table-auto w-full border-collapse border border-gray-300">
@@ -106,7 +112,7 @@ const GridTable: React.FC = () => {
                                 {y !== '1' && (
                                     <button
                                         onClick={() => deleteRow(y)}
-                                        className="ml-2 text-red-500"
+                                        className="ml-2 text-red-500 transition-transform transform focus:outline-none active:scale-95"
                                     >
                                         Delete
                                     </button>
@@ -127,12 +133,14 @@ const GridTable: React.FC = () => {
                                             ))}
                                         </select>
                                     ) : x === 'click to record' ? (
-                                        <button
-                                            onClick={() => handleRecordClick(y)}
-                                            className="bg-green-500 text-white px-2 py-1 rounded"
-                                        >
-                                            Record
-                                        </button>
+                                        <div className="flex justify-center items-center h-full">
+                                            <button
+                                                onClick={() => handleRecordClick(y)}
+                                                className="bg-slate-200 text-black px-2 py-1 rounded transition-transform transform focus:outline-none active:scale-95"
+                                            >
+                                                Measure
+                                            </button>
+                                        </div>
                                     ) : (
                                         <input
                                             type="text"
