@@ -1,4 +1,3 @@
-import CircleIcon from '@mui/icons-material/Circle';
 
 type ArmCardProps = {
     armPosition: string;
