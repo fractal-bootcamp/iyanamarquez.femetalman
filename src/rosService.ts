@@ -26,26 +26,14 @@ const initializeRos = (url: string): Promise<ROSLIB.Ros> => {
 };
 
 const callService = (name: string, serviceName: string, requestData: any) => {
-  // TODO: remove test
-  if (ros || "TEST" === "TEST") {
+  if (ros) {
     console.log("Calling service:", name, serviceName, requestData);
     const service = new ROSLIB.Service({
       ros: ros,
       name: name,
-      serviceType: serviceName, // Update with the actual service type
+      serviceType: serviceName,
     });
-
-    const request = new ROSLIB.ServiceRequest({});
-
-    service.callService(
-      request,
-      (result) => {
-        console.log("Service call successful:", result);
-      },
-      (error) => {
-        console.error("Service call error:", error);
-      }
-    );
+    // ... rest of the function
   } else {
     console.warn("No ROS connection");
   }
@@ -72,12 +60,13 @@ const createRequestPayload = (payloadData: PayloadData) => {
 // TODO: what is the message type?
 const publishJoystickData = (x: number, y: number) => {
   if (ros) {
+    // TODO CHANGE TO MESSAGE TYPE
     const publisher = new ROSLIB.Topic({
       ros: ros,
       name: "/publish_joystick", // The ROS topic you want to publish to
       messageType: "geometry_msgs/Vector3", // The type of message you're publishing
     });
-    // TODO: What should z be?
+    // TODO: Update what should Z be?
     const message = new ROSLIB.Message({
       x: x,
       y: y,
