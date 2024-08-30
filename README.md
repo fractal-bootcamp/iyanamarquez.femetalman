@@ -43,6 +43,7 @@ The Arm cards are connected to dummyROSServices
 ];
 ```
 src/Components/GridTable/Joystick.tsx
+<br></br>
 The Joystick records x,y coordinates and publishes them to a fake ROS Topic. Right now the Z coordinate is set to 0 by default. 
 ```js
 // TODO: what is the message type?
