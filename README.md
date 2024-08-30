@@ -8,6 +8,7 @@ The Tool card (currently labeled as Arm cards) dropdown options are generated us
 ![Screenshot 2024-08-30 at 6 15 36 PM](https://github.com/user-attachments/assets/58ab93a2-ed94-473a-b59c-ef4ca856f223)
 
 ToolCard.tsx
+Each button option on the card calls a ROS service
 ```js
  onClick={() => callService(service.name, service.class, {})}
 ```
