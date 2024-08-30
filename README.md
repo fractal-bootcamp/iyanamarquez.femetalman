@@ -4,6 +4,7 @@
 
 ## Left and Right Cards
 The Tool card (currently labeled as Arm cards) dropdown options are generated using the tool.yaml file. They call the services that were indicated in the tool.yaml
+<br></br>
 ![Screenshot 2024-08-30 at 6 15 36 PM](https://github.com/user-attachments/assets/58ab93a2-ed94-473a-b59c-ef4ca856f223)
 
 ToolCard.tsx
