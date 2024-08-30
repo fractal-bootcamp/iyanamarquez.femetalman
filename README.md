@@ -1,50 +1,41 @@
-# React + TypeScript + Vite
+# ROSlibjs GUI 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Left and Right Cards
+The Tool card (currently labeled as Arm cards) dropdown options are generated using the tool.yaml file. They call the services that were indicated in the tool.yaml
+![Screenshot 2024-08-30 at 6 15 36 PM](https://github.com/user-attachments/assets/58ab93a2-ed94-473a-b59c-ef4ca856f223)
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
+ToolCard.tsx
 ```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+ onClick={() => callService(service.name, service.class, {})}
+```
+rosService.ts
+```js
+const callService = (name: string, serviceName: string, requestData: any) => {
+  if (ros) {
+    console.log("Calling service:", name, serviceName, requestData);
+    const service = new ROSLIB.Service({
+      ros: ros,
+      name: name,
+      serviceType: serviceName,
+    });
+    // ... rest of the function
+  } else {
+    console.warn("No ROS connection");
+  }
+};
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+The Arm cards are connected to dummyROSServies
+![Screenshot 2024-08-30 at 6 13 39 PM](https://github.com/user-attachments/assets/b0be0797-9f4e-4f56-98d1-48c91e8fd62b)
 
 ```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+    { label: 'Resend program', onClick: () => dummyROSService('resendProgram') },
+    { label: 'Unlock protective stop', onClick: () => dummyROSService('unlockProtectiveStop') },
+    { label: 'Rest joints', onClick: () => dummyROSService('restJoints') },
+    { label: 'Stow joints', onClick: () => dummyROSService('stowJoints') },
+    // { label: 'Freedrive', onClick: () => dummyROSService('freedrive') },
+];
 ```
+
