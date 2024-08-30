@@ -68,3 +68,13 @@ const publishJoystickData = (x: number, y: number) => {
 };
 ```
 
+GridTable.tsx
+<br></br>
+The Grid table allows you to enter x,y,z coordinates and record them in state. They are not currently being sent to any topic or service. (Need to know where to send them)
+<br></br>
+
+![Screenshot 2024-08-30 at 6 31 47 PM](https://github.com/user-attachments/assets/a25c107a-5057-4401-8d78-e6a41f6b62cc)
+
+
+
+
